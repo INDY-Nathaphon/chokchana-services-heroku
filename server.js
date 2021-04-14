@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const Product = require('./models/product');
 
 const MONGODB_URI =
-	process.env.MONGODB_URI || 'mongodb+srv://indy:11850532@cluster0.bhxcn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+	process.env.MONGODB_URI || 'mongodb+srv://indy:testdatabase@cluster0.bhxcn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 const PORT = process.env.PORT || 9000;
 
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
@@ -32,13 +32,9 @@ app.get('/products/:id', async (req, res) => {
 });
 app.get('/products/R/:Rank1', async (req, res) => {
 	const { Rank1 } = req.params;
-	console.log('Rank');
-	console.log(Rank1);
-	console.log('Rank');
 	try {
 		const product = await Product.find({ Rank: Rank1 });
-		console.log(product);
-		res.json(product);
+		res.json(product[0].Data);
 	} catch (error) {
 		res.status(400).json(error);
 	}
