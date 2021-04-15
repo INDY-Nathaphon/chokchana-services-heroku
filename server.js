@@ -1,23 +1,32 @@
+const { json } = require('express');
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const Product = require('./models/product');
-
 const MONGODB_URI =
-	process.env.MONGODB_URI || 'mongodb+srv://indy:testdatabase@cluster0.bhxcn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+	process.env.MONGODB_URI ||
+	'mongodb+srv://indy:testdatabase@cluster0.bhxcn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 const PORT = process.env.PORT || 9000;
-
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
-
 mongoose.connection.on('error', (err) => {
 	console.error('MongoDB error', err);
 });
-
 app.use(express.json());
-
 app.get('/products', async (req, res) => {
 	const products = await Product.find({});
 	res.json(products);
+});
+app.get('/products/lotto', async (req, res) => {
+	const products = await Product.find({});
+	const out1 = [];
+	for (x in products) {
+		const obj = {};
+		newNum = products[x].Data;
+		newVal = products[x].Rank;
+		obj[newVal] = newNum;
+		out1.push(obj);
+	}
+	res.json(out1);
 });
 
 app.get('/products/:id', async (req, res) => {
@@ -33,8 +42,16 @@ app.get('/products/:id', async (req, res) => {
 app.get('/products/R/:Rank1', async (req, res) => {
 	const { Rank1 } = req.params;
 	try {
-		const product = await Product.find({ Rank: Rank1 });
-		res.json(product[0].Data);
+		const products = await Product.find({ Rank: Rank1 });
+		const out1 = [];
+		for (x in products) {
+			const obj = {};
+			newNum = products[x].Data;
+			newVal = products[x].Rank;
+			obj[newVal] = newNum;
+			out1.push(obj);
+		}
+		res.json(out1);
 	} catch (error) {
 		res.status(400).json(error);
 	}
@@ -42,8 +59,16 @@ app.get('/products/R/:Rank1', async (req, res) => {
 app.get('/products/D/:Date1', async (req, res) => {
 	const { Date1 } = req.params;
 	try {
-		const product = await Product.find({ Date: Date1 });
-		res.json(product);
+		const products = await Product.find({ Date: Date1 });
+		const out1 = [];
+		for (x in products) {
+			const obj = {};
+			newNum = products[x].Data;
+			newVal = products[x].Rank;
+			obj[newVal] = newNum;
+			out1.push(obj);
+		}
+		res.json(out1);
 	} catch (error) {
 		res.status(400).json(error);
 	}
