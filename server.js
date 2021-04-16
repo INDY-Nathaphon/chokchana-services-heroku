@@ -12,6 +12,7 @@ mongoose.connection.on('error', (err) => {
 	console.error('MongoDB error', err);
 });
 app.use(express.json());
+//get method
 app.get('/products', async (req, res) => {
 	const products = await Product.find({});
 	res.json(products);
@@ -28,7 +29,6 @@ app.get('/products/lotto', async (req, res) => {
 	}
 	res.json(out1);
 });
-
 app.get('/products/:id', async (req, res) => {
 	const { id } = req.params;
 
@@ -56,7 +56,7 @@ app.get('/products/R/:Rank1', async (req, res) => {
 		res.status(400).json(error);
 	}
 });
-app.get('/products/D/:Date1', async (req, res) => {
+app.get('/products/Dateonly/:Date1', async (req, res) => {
 	const { Date1 } = req.params;
 	try {
 		const products = await Product.find({ Date: Date1 });
@@ -69,6 +69,15 @@ app.get('/products/D/:Date1', async (req, res) => {
 			out1.push(obj);
 		}
 		res.json(out1);
+	} catch (error) {
+		res.status(400).json(error);
+	}
+});
+app.get('/products/Dateall/:Date1', async (req, res) => {
+	const { Date1 } = req.params;
+	try {
+		const products = await Product.find({ Date: Date1 });
+		res.json(products);
 	} catch (error) {
 		res.status(400).json(error);
 	}
