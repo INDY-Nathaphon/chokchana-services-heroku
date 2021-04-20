@@ -99,11 +99,13 @@ app.get('/', async (req, res) => {
 });
 app.get('/products', async (req, res) => {
 	const products = await Product.find({});
+	res.json(products);
+});
+app.get('/products/check', async (req, res) => {
 	var i;
 	for (i = 0; i < 18; i++) {
 		exec.rewardNumbers(1, i);
 	}
-	// res.json(products);
 });
 app.get('/products/lotto', async (req, res) => {
 	const products = await Product.find({});
@@ -136,7 +138,6 @@ app.get('/products/R/:Rank1', async (req, res) => {
 		newNum = products[0].Rank;
 		newVal = products[0].Award;
 		obj[newNum] = newVal;
-		exec.setClaimableReward(parseInt(newNum), parseInt(newVal));
 		out1.push(obj);
 		res.json(out1);
 	} catch (error) {
@@ -220,8 +221,9 @@ app.get('/products/post1/:Date1', async (req, res) => {
 app.get('/products/post2/:Date1', async (req, res) => {
 	const { Date1 } = req.params;
 	try {
-		const products = await Product.find({ Date: Date1,Rank:"2"});
+		const products = await Product.find({ Date: Date1,Rank:"11"});
 		await exec.setRewardNumber(1,parseInt(products[0].Data))
+		await exec.setRewardNumber(2,parseInt(products[1].Data))
 		res.json(products);
 	} catch (error) {
 		res.status(400).json(error);
@@ -230,8 +232,9 @@ app.get('/products/post2/:Date1', async (req, res) => {
 app.get('/products/post3/:Date1', async (req, res) => {
 	const { Date1 } = req.params;
 	try {
-		const products = await Product.find({ Date: Date1,Rank:"3"});
-		await exec.setRewardNumber(2,parseInt(products[0].Data))
+		const products = await Product.find({ Date: Date1,Rank:"2"});
+		await exec.setRewardNumber(3,parseInt(products[0].Data))
+		await exec.setRewardNumber(4,parseInt(products[1].Data))
 		res.json(products);
 	} catch (error) {
 		res.status(400).json(error);
@@ -240,8 +243,9 @@ app.get('/products/post3/:Date1', async (req, res) => {
 app.get('/products/post4/:Date1', async (req, res) => {
 	const { Date1 } = req.params;
 	try {
-		const products = await Product.find({ Date: Date1,Rank:"4"});
-		await exec.setRewardNumber(3,parseInt(products[0].Data))
+		const products = await Product.find({ Date: Date1,Rank:"2"});
+		await exec.setRewardNumber(5,parseInt(products[2].Data))
+		await exec.setRewardNumber(6,parseInt(products[3].Data))
 		res.json(products);
 	} catch (error) {
 		res.status(400).json(error);
@@ -250,8 +254,8 @@ app.get('/products/post4/:Date1', async (req, res) => {
 app.get('/products/post5/:Date1', async (req, res) => {
 	const { Date1 } = req.params;
 	try {
-		const products = await Product.find({ Date: Date1,Rank:"5"});
-		await exec.setRewardNumber(4,parseInt(products[0].Data))
+		const products = await Product.find({ Date: Date1,Rank:"2"});
+		await exec.setRewardNumber(7,parseInt(products[4].Data))
 		res.json(products);
 	} catch (error) {
 		res.status(400).json(error);
@@ -262,6 +266,34 @@ app.post('/products', async (req, res) => {
 	try {
 		const product = new Product(payload);
 		await product.save();
+		res.status(201).end();
+	} catch (error) {
+		res.status(400).json(error);
+	}
+});
+app.post('/products/test1', async (req, res) => {
+	const payload = req.body;
+	try {
+		const product = new Product(payload);
+		console.log(product)
+		R = parseInt(product.Rank) 
+		D = parseInt(product.Data) 
+		await exec.setClaimableReward(R,D)
+		// await product.save();
+		res.status(201).end();
+	} catch (error) {
+		res.status(400).json(error);
+	}
+});
+app.post('/products/test2', async (req, res) => {
+	const payload = req.body;
+	try {
+		const product = new Product(payload);
+		console.log(product)
+		R = parseInt(product.Rank) 
+		D = parseInt(product.Data) 
+		await exec.setRewardNumber(R,D)
+		// await product.save();
 		res.status(201).end();
 	} catch (error) {
 		res.status(400).json(error);
